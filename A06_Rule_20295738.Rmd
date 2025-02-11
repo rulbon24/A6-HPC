@@ -80,4 +80,11 @@ runtime_comparison <- data.frame(
 print(runtime_comparison)
 ```
 
-The theoretical speedup is 8 times faster, but the actual speedup is 3.16 times faster. The theoretical speedup is longer than the actual runtime because of overhead associated with parallelization, such as data transfer and cluster setup.
+```{r}
+summary_text <- paste(
+  "The theoretical speedup is", theoretical_speedup, "times faster, but the actual speedup is", 
+  round(runtime_comparison$Actual_Speedup, 2), "times faster. The theoretical speedup is longer than the actual runtime because of overhead associated with parallelization, such as data transfer and cluster setup."
+)
+print(summary_text)
+```
+

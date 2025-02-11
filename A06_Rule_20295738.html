@@ -393,7 +393,7 @@ end_time_serial &lt;- Sys.time()  # To end timer
 runtime_serial &lt;- end_time_serial - start_time_serial  # To calculate runtime
 
 runtime_serial</code></pre>
-<pre><code>## Time difference of 10.69798 secs</code></pre>
+<pre><code>## Time difference of 12.04254 secs</code></pre>
 <p><strong>Predict how much faster a multi-threaded program will run
 compared to a serial program, based on the number of threads you have.
 Use objects in R to calculate this exactly.</strong></p>
@@ -426,11 +426,13 @@ the actual run-time of your parallel program? Explain why.</strong></p>
 
 print(runtime_comparison)</code></pre>
 <pre><code>##          Serial      Parallel Theoretical_Speedup Actual_Speedup
-## 1 10.69798 secs 2.535193 secs                   8        4.21979</code></pre>
-<p>The theoretical speedup is 8 times faster, but the actual speedup is
-3.16 times faster. The theoretical speedup is longer than the actual
-runtime because of overhead associated with parallelization, such as
-data transfer and cluster setup.</p>
+## 1 12.04254 secs 2.508258 secs                   8       4.801156</code></pre>
+<pre class="r"><code>summary_text &lt;- paste(
+  &quot;The theoretical speedup is&quot;, theoretical_speedup, &quot;times faster, but the actual speedup is&quot;, 
+  round(runtime_comparison$Actual_Speedup, 2), &quot;times faster. The theoretical speedup is longer than the actual runtime because of overhead associated with parallelization, such as data transfer and cluster setup.&quot;
+)
+print(summary_text)</code></pre>
+<pre><code>## [1] &quot;The theoretical speedup is 8 times faster, but the actual speedup is 4.8 times faster. The theoretical speedup is longer than the actual runtime because of overhead associated with parallelization, such as data transfer and cluster setup.&quot;</code></pre>
 
 
 
