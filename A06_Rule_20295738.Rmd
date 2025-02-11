@@ -1,0 +1,83 @@
+---
+title: "A06_Rule_20295738"
+author: "Bonnie Rule"
+date: "2025-02-11"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Git link: https://github.com/rulbon24/A6-HPC.git
+
+**Load these libraries: doParallel, parallel, and foreach :**
+
+```{r}
+library(doParallel)
+library(parallel)
+library(foreach)
+```
+
+**Run the detectCores() function from the parallel package. This will tell you the number of cores in your system. Make a note of this in your R markdown report. :**
+
+```{r}
+detectCores()
+```
+
+There are 8 cores in my computer's system.
+
+**Write a standard for loop 4,000 times, and each time calculate the mean of 100,000 random numbers from a normal distribution with mean of 10 and standard deviation of 3. Track the amount of time this takes to run. You can do this by assigning objects with the Sys.time() function before and after the loop. Calculate the difference between the objects for an estimate of the run time:**
+
+```{r}
+# Setting the parameters:
+n_loops <- 4000
+n_samples <- 100000
+mean_val <- 10
+sd_val <- 3
+
+start_time_serial <- Sys.time()  # To start timer
+for (i in 1:n_loops) {
+  random_numbers <- rnorm(n_samples, mean = mean_val, sd = sd_val)
+  mean(random_numbers)
+}
+end_time_serial <- Sys.time()  # To end timer
+runtime_serial <- end_time_serial - start_time_serial  # To calculate runtime
+
+runtime_serial
+```
+
+**Predict how much faster a multi-threaded program will run compared to a serial program, based on the number of threads you have. Use objects in R to calculate this exactly.**
+
+```{r}
+n_cores <- detectCores()
+theoretical_speedup <- n_cores
+```
+
+**Now modify your for loop to run the same code in parallel, instead of running each of the 4,000 loops in order. Add code to calculate the run time for your parallel loop.**
+
+```{r}
+start_time_parallel <- Sys.time()  # To start timer
+cl <- makeCluster(n_cores)  # Create a cluster with the number of cores
+clusterExport(cl, c("n_samples", "mean_val", "sd_val"))
+parLapply(cl, 1:n_loops, function(i) {
+  random_numbers <- rnorm(n_samples, mean = mean_val, sd = sd_val)
+  mean(random_numbers)
+})
+stopCluster(cl)  # Stop the cluster
+end_time_parallel <- Sys.time()  # To end timer
+runtime_parallel <- end_time_parallel - start_time_parallel  # Calculate runtime
+```
+
+**Compare the run-time for your parallel loop with the run-time for your serial loop and the theoretical run-time you calculated for the parallel loop based on the number of cores in your computer. Summarize these results in a sentence. Is the theoretical shorter or longer than the actual run-time of your parallel program? Explain why.**
+
+```{r}
+runtime_comparison <- data.frame(
+  Serial = runtime_serial,
+  Parallel = runtime_parallel,
+  Theoretical_Speedup = theoretical_speedup,
+  Actual_Speedup = as.numeric(runtime_serial) / as.numeric(runtime_parallel)
+)
+
+print(runtime_comparison)
+```
+
+The theoretical speedup is 8 times faster, but the actual speedup is 3.16 times faster. The theoretical speedup is longer than the actual runtime because of overhead associated with parallelization, such as data transfer and cluster setup.
