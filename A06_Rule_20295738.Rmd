@@ -3,8 +3,8 @@ title: "A06_Rule_20295738"
 author: "Bonnie Rule"
 date: "2025-02-11"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 Git link: https://github.com/rulbon24/A6-HPC.git
@@ -58,10 +58,10 @@ theoretical_speedup <- n_cores
 start_time_parallel <- Sys.time()  # To start timer
 cl <- makeCluster(n_cores)  # Create a cluster with the number of cores
 clusterExport(cl, c("n_samples", "mean_val", "sd_val"))
-parLapply(cl, 1:n_loops, function(i) {
+invisible(parLapply(cl, 1:n_loops, function(i) {
   random_numbers <- rnorm(n_samples, mean = mean_val, sd = sd_val)
   mean(random_numbers)
-})
+}))
 stopCluster(cl)  # Stop the cluster
 end_time_parallel <- Sys.time()  # To end timer
 runtime_parallel <- end_time_parallel - start_time_parallel  # Calculate runtime
